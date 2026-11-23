@@ -1,4 +1,3 @@
-
 name: GitHub Daily Digest
 
 on:
@@ -23,6 +22,6 @@ jobs:
 
       - name: Send daily digest
         env:
-          QQ_EMAIL: ${{ secrets.QQ_EMAIL }}
-          QQ_AUTH_CODE: ${{ secrets.QQ_AUTH_CODE }}
+          GMAIL_EMAIL: ${{ secrets.GMAIL_EMAIL }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
         run: python daily_digest.py
