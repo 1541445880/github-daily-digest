@@ -26,6 +26,31 @@ request = urllib.request.Request(
 with urllib.request.urlopen(request, timeout=30) as response:
     data = json.loads(response.read().decode("utf-8"))
 
+def translate_to_chinese(text):
+    """将项目简介翻译成简体中文；翻译服务不可用时保留原文。"""
+    if not text:
+        return "暂无简介"
+    try:
+        params = urllib.parse.urlencode({
+            "client": "gtx",
+            "sl": "auto",
+            "tl": "zh-CN",
+            "dt": "t",
+            "q": text
+        })
+        translate_url = "https://translate.googleapis.com/translate_a/single?" + params
+        translate_request = urllib.request.Request(
+            translate_url,
+            headers={"User-Agent": "Mozilla/5.0"}
+        )
+        with urllib.request.urlopen(translate_request, timeout=15) as response:
+            translated_data = json.loads(response.read().decode("utf-8"))
+        translated = "".join(part[0] for part in translated_data[0] if part[0])
+        return translated or text
+    except Exception:
+        return text
+
+
 today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 lines = [
     f"GitHub 热门项目日报 - {today}",
@@ -37,7 +62,7 @@ lines = [
 for i, repo in enumerate(data.get("items", []), 1):
     lines.extend([
         f"{i}. {repo['full_name']}",
-        f"简介：{repo.get('description') or '暂无简介'}",
+        f"项目简介（中文）：{translate_to_chinese(repo.get('description'))}",
         f"Stars：{repo['stargazers_count']}",
         f"语言：{repo.get('language') or '未注明'}",
         f"地址：{repo['html_url']}",
