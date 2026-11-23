@@ -2,7 +2,7 @@ name: GitHub Daily Digest
 
 on:
   schedule:
-    - cron: '2 3 * * *'
+    - cron: '0 4 * * *'
   workflow_dispatch:
 
 permissions:
