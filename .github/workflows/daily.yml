@@ -2,7 +2,7 @@ name: GitHub Daily Digest
 
 on:
   schedule:
-    - cron: '0 4 * * *'
+    - cron: '17 4 * * *'
   workflow_dispatch:
 
 permissions:
@@ -16,9 +16,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+        uses: actions/setup-python@v5
 
       - name: Send daily digest
         env:
