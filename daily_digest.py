@@ -46,18 +46,18 @@ for i, repo in enumerate(data.get("items", []), 1):
 
 body = "\n".join(lines)
 
-# 沿用已配置的 QQ 邮箱 SMTP 发件账号，同时投递到 QQ 和 Gmail
-sender = os.environ["QQ_EMAIL"]
-password = os.environ["QQ_AUTH_CODE"]
-receivers = ["1541445880@qq.com", "luojiawan666894@gmail.com"]
+# 仅使用 Gmail SMTP，日报只发送到 Gmail
+sender = os.environ["GMAIL_EMAIL"]
+password = os.environ["GMAIL_APP_PASSWORD"]
+receiver = "luojiawan666894@gmail.com"
 
 message = MIMEText(body, "plain", "utf-8")
 message["Subject"] = Header(f"GitHub 每日热门项目日报 {today}", "utf-8")
 message["From"] = sender
-message["To"] = ", ".join(receivers)
+message["To"] = receiver
 
-with smtplib.SMTP_SSL("smtp.qq.com", 465, timeout=30) as server:
+with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=30) as server:
     server.login(sender, password)
-    server.sendmail(sender, receivers, message.as_string())
+    server.sendmail(sender, [receiver], message.as_string())
 
-print("日报邮件已提交发送至 QQ 邮箱和 Gmail！")
+print("GitHub 每日日报已提交发送至 Gmail！")
